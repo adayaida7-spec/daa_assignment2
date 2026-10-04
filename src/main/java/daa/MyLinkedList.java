@@ -1,6 +1,6 @@
 package daa;
 
-public class MyLinkedList {
+public class MyLinkedList implements IntList {
     private static class Node {
         int value;
         Node next;
