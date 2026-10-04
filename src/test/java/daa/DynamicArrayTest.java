@@ -88,4 +88,42 @@ class DynamicArrayTest {
         assertThrows(IndexOutOfBoundsException.class,
                 () -> array.add(2, 20));
     }
+    @Test
+    void countsReadsSearchAndShifts() {
+        DynamicArray array = new DynamicArray();
+        array.add(10);
+        array.add(20);
+        array.add(30);
+        array.metrics().reset();
+        assertEquals(20, array.get(1));
+        assertEquals(1L, array.metrics().steps);
+        assertEquals(0L, array.metrics().moves);
+        assertEquals(0L, array.metrics().comparisons);
+
+        array.metrics().reset();
+
+        assertFalse(array.contains(99));
+        assertEquals(3L, array.metrics().steps);
+        assertEquals(3L, array.metrics().comparisons);
+        assertEquals(0L, array.metrics().moves);
+
+        array.metrics().reset();
+        assertEquals(10, array.remove(0));
+        assertEquals(3L, array.metrics().steps);
+        assertEquals(2L, array.metrics().moves);
+        assertEquals(0L, array.metrics().comparisons);
+    }
+    @Test
+    void countsCopiesDuringGrowth() {
+        DynamicArray array = new DynamicArray();
+        for (int i = 0; i < 4; i++) {
+            array.add(i);
+        }
+        array.metrics().reset();
+        array.add(4);
+        assertEquals(4L, array.metrics().steps);
+        assertEquals(4L, array.metrics().moves);
+        assertEquals(0L, array.metrics().comparisons);
+        assertEquals(5, array.size());
+    }
 }
